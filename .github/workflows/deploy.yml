@@ -41,14 +41,17 @@ jobs:
         with:
           repository: notifirehq/cloud-infra
           token: ${{ secrets.GH_PACKAGES }}
+          path: cloud-infra
 
       - name: Terraform Change Workspace
         run: |
-          ls
+          ls -la 
           echo '-----'
-          cd ../ && ls 
+          cd terraform && ls -la
           echo '-----'
-          cd ../../ && ls
+          cd ../ && ls -la
+          echo '-----'
+          cd ../../ && ls -la
           echo '-----'
 
       - name: Terraform setup
