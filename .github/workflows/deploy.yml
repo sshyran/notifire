@@ -36,6 +36,31 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-
 
+      - name: Checkout cloud infra
+        uses: actions/checkout@master
+        with:
+          repository: notifirehq/cloud-infra
+          token: ${{ secrets.GH_PACKAGES }}
+
+      - name: Terraform setup
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 0.14.4
+          terraform_wrapper: false
+      - name: Terraform Change Workspace
+        run: |
+          ls
+          cd ../ && ls 
+          cd ../../ && ls
+
+      - name: Terraform Init
+        working-directory: ../cloud-infra/terraform
+        run: terraform init
+
+      - name: Terraform Change Workspace
+        working-directory: ../cloud-infra/terraform
+        run: terraform workspace select dev
+
       - uses: pnpm/action-setup@v2.0.1
         with:
           version: 6.0.2
@@ -77,31 +102,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
-
-      - name: Checkout cloud infra
-        uses: actions/checkout@master
-        with:
-          repository: notifirehq/cloud-infra
-          token: ${{ secrets.GH_PACKAGES }}
-
-      - name: Terraform setup
-        uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_version: 0.14.4
-          terraform_wrapper: false
-      - name: Terraform Change Workspace
-        run: |
-          ls
-          cd ../ && ls 
-          cd ../../ && ls
-
-      - name: Terraform Init
-        working-directory: ../cloud-infra/terraform
-        run: terraform init
-
-      - name: Terraform Change Workspace
-        working-directory: ../cloud-infra/terraform
-        run: terraform workspace select dev
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
