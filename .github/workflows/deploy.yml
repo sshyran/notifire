@@ -89,6 +89,11 @@ jobs:
         with:
           terraform_version: 0.14.4
           terraform_wrapper: false
+      - name: Terraform Change Workspace
+        run: |
+          ls
+          cd ../ && ls 
+          cd ../../ && ls
 
       - name: Terraform Init
         working-directory: ../cloud-infra/terraform
