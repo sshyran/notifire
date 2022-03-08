@@ -4,10 +4,6 @@ name: Deploy DEV API
 # events but only for the master branch
 on: push
 
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-
 jobs:
   deploy:
     # The type of runner that the job will run on
@@ -88,13 +84,6 @@ jobs:
           terraform_version: 0.14.4
           terraform_wrapper: false
 
-      - name: Log in to the Container registry
-        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         env:
@@ -102,9 +91,9 @@ jobs:
           DOCKER_NAME: notifire/api
           IMAGE_TAG: ${{ github.sha }}
           GH_ACTOR: ${{ github.actor }}
-          GH_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+          GH_PASSWORD: ${{ secrets.GH_PACKAGES }}
         run: |
-          docker login ghcr.io -u $GH_ACTOR -p $GH_PASSWORD
+          echo $GH_PASSWORD | docker login ghcr.io -u $GH_ACTOR --password-stdin 
           docker build -t ghcr.io/$REGISTERY_OWNER/$DOCKER_NAME:$IMAGE_TAG -f apps/api/Dockerfile .
           docker run --network=host --name api -dit --env NODE_ENV=test ghcr.io/$REGISTERY_OWNER/$DOCKER_NAME:$IMAGE_TAG
           docker run --network=host appropriate/curl --retry 10 --retry-delay 5 --retry-connrefused http://localhost:1337/v1/health-check | grep 'ok'
