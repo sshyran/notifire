@@ -102,10 +102,10 @@ jobs:
           DOCKER_NAME: notifire/api
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t $REGISTERY_OWNER/$DOCKER_NAME:$IMAGE_TAG -f apps/api/Dockerfile .
+          docker build -t ghcr.io/$REGISTERY_OWNER/$DOCKER_NAME:$IMAGE_TAG -f apps/api/Dockerfile .
           docker run --network=host --name api -dit --env NODE_ENV=test $REGISTERY_OWNER/$DOCKER_NAME:$IMAGE_TAG
           docker run --network=host appropriate/curl --retry 10 --retry-delay 5 --retry-connrefused http://localhost:1337/v1/health-check | grep 'ok'
-          docker tag $REGISTERY_OWNER/$DOCKER_NAME:$IMAGE_TAG $REGISTERY_OWNER/$DOCKER_NAME:dev
-          docker push $REGISTERY_OWNER/$DOCKER_NAME:dev
-          docker push $REGISTERY_OWNER/$DOCKER_NAME:$IMAGE_TAG
+          docker tag $REGISTERY_OWNER/$DOCKER_NAME:$IMAGE_TAGghcr.io/ $REGISTERY_OWNER/$DOCKER_NAME:dev
+          docker push ghcr.io/$REGISTERY_OWNER/$DOCKER_NAME:dev
+          docker push ghcr.io/$REGISTERY_OWNER/$DOCKER_NAME:$IMAGE_TAG
           echo "::set-output name=IMAGE::$REGISTERY_OWNER/$DOCKER_NAME:$IMAGE_TAG"
