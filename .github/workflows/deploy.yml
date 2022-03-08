@@ -43,17 +43,6 @@ jobs:
           token: ${{ secrets.GH_PACKAGES }}
           path: cloud-infra
 
-      - name: Terraform Change Workspace
-        run: |
-          ls -la 
-          echo '-----'
-          cd terraform && ls -la
-          echo '-----'
-          cd ../ && ls -la
-          echo '-----'
-          cd ../../ && ls -la
-          echo '-----'
-
       - name: Terraform setup
         uses: hashicorp/setup-terraform@v1
         with:
@@ -62,11 +51,11 @@ jobs:
 
 
       - name: Terraform Init
-        working-directory: ../cloud-infra/terraform
+        working-directory: cloud-infra/terraform
         run: terraform init
 
       - name: Terraform Change Workspace
-        working-directory: ../cloud-infra/terraform
+        working-directory: cloud-infra/terraform
         run: terraform workspace select dev
 
       - uses: pnpm/action-setup@v2.0.1
