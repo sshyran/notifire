@@ -42,16 +42,21 @@ jobs:
           repository: notifirehq/cloud-infra
           token: ${{ secrets.GH_PACKAGES }}
 
+      - name: Terraform Change Workspace
+        run: |
+          ls
+          echo '-----'
+          cd ../ && ls 
+          echo '-----'
+          cd ../../ && ls
+          echo '-----'
+
       - name: Terraform setup
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 0.14.4
           terraform_wrapper: false
-      - name: Terraform Change Workspace
-        run: |
-          ls
-          cd ../ && ls 
-          cd ../../ && ls
+
 
       - name: Terraform Init
         working-directory: ../cloud-infra/terraform
