@@ -65,7 +65,7 @@ jobs:
         run: terraform workspace select dev
 
       - name: Terraform get output
-        working-directory: terraform
+        working-directory: cloud-infra/terraform
         id: terraform
         run: |
           echo "api_ecs_container_name=$(terraform output -json api_ecs_container_name | jq -r .)" >> $GITHUB_ENV
@@ -77,7 +77,7 @@ jobs:
         run: |
           aws ecs describe-task-definition --task-definition ${{ env.api_task_name }} \
           --query taskDefinition > task-definition.json
-          
+
       - uses: pnpm/action-setup@v2.0.1
         with:
           version: 6.0.2
