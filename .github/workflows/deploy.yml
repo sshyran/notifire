@@ -91,11 +91,11 @@ jobs:
           terraform_wrapper: false
 
       - name: Terraform Init
-        working-directory: cloud-infra/terraform
+        working-directory: ../cloud-infra/terraform
         run: terraform init
 
       - name: Terraform Change Workspace
-        working-directory: cloud-infra/terraform
+        working-directory: ../cloud-infra/terraform
         run: terraform workspace select dev
 
       - name: Build, tag, and push image to Amazon ECR
